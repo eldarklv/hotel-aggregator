@@ -11,13 +11,18 @@ export enum UserRole {
 
 @Schema()
 export class User {
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ type: String, enum: UserRole })
+  @Prop({
+    type: String,
+    enum: UserRole,
+    default: UserRole.CLIENT,
+    required: true,
+  })
   role: string;
 
   @Prop()
