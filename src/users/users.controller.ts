@@ -5,11 +5,14 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterUserDto } from './dto/registerUser.dto';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Controller()
 export class UsersController {
@@ -22,6 +25,8 @@ export class UsersController {
   }
 
   @Get('/api/admin/users')
+  @Roles(['admin'])
+  @UseGuards(RolesGuard)
   getUsersListByAdmin(
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
