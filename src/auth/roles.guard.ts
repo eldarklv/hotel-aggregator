@@ -11,13 +11,13 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
+    // записываем в ролз допустимые роли из декоратора @Roles(['role'])
     // const roles = this.reflector.get(Roles, context.getHandler());
     // if (!roles) {
     //   return true;
     // }
     // const request = context.switchToHttp().getRequest();
     // const user = request.user;
-
 
     // тестирование ролевки
     const roles = ['admin', 'manager'];
@@ -26,3 +26,4 @@ export class RolesGuard implements CanActivate {
     return this.authService.matchRoles(roles, user.role);
   }
 }
+// далее нужно сделать аутентификацию с сессией. из сесси получать роль для авторизации
