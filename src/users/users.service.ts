@@ -50,13 +50,12 @@ export class UsersService implements IUserService {
   }
 
   findById(id: ID): Promise<User> {
-    console.log(this.userModel);
     const user = this.userModel.findById(id);
     return user;
   }
 
   findByEmail(email: string): Promise<User> {
-    const user = this.userModel.findOne({ email });
+    const user = this.userModel.findOne({ email }).lean();
     return user;
   }
 

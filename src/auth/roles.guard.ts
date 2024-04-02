@@ -12,16 +12,18 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     // записываем в ролз допустимые роли из декоратора @Roles(['role'])
-    // const roles = this.reflector.get(Roles, context.getHandler());
-    // if (!roles) {
-    //   return true;
-    // }
-    // const request = context.switchToHttp().getRequest();
-    // const user = request.user;
+    const roles = this.reflector.get(Roles, context.getHandler());
+    if (!roles) {
+      return true;
+    }
+    const request = context.switchToHttp().getRequest();
+
+    const user = request.user;
+    console.log(user);
 
     // тестирование ролевки
-    const roles = ['admin', 'manager'];
-    const user = { role: 'admin' };
+    // const roles = ['admin', 'manager'];
+    // const user = { role: 'admin' };
 
     return this.authService.matchRoles(roles, user.role);
   }
