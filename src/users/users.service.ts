@@ -1,8 +1,10 @@
 import {
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   InternalServerErrorException,
+  forwardRef,
 } from '@nestjs/common';
 import IUserService from './interfaces/IUserService';
 import SearchUserParams from './interfaces/SearchUserParams';
@@ -12,10 +14,13 @@ import { Model } from 'mongoose';
 import { ID } from 'src/types/CommonTypes';
 import { RegisterUserDto } from './dto/registerUser.dto';
 import * as bcrypt from 'bcryptjs';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService implements IUserService {
   constructor(
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService,
     @InjectModel(User.name)
     private userModel: Model<User>,
   ) {}
@@ -45,6 +50,7 @@ export class UsersService implements IUserService {
   }
 
   findById(id: ID): Promise<User> {
+    console.log(this.userModel);
     const user = this.userModel.findById(id);
     return user;
   }
