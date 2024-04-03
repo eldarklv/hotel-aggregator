@@ -8,7 +8,6 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
-  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterUserDto } from './dto/registerUser.dto';
@@ -21,6 +20,8 @@ export class UsersController {
 
   @Post('/api/admin/users')
   @UsePipes(ValidationPipe)
+  @Roles(['admin'])
+  @UseGuards(RolesGuard)
   register(@Body() user: RegisterUserDto) {
     return this.usersService.create(user);
   }
@@ -45,6 +46,8 @@ export class UsersController {
   }
 
   @Get('/api/manager/users')
+  @Roles(['manager'])
+  @UseGuards(RolesGuard)
   getUsersListByManager(
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
@@ -61,6 +64,7 @@ export class UsersController {
     });
   }
 
+  // неиспользуемые ручки
   @Get('/api/admin/user-by-id/:id')
   getUserById(@Param('id') id: string) {
     return this.usersService.findById(id);

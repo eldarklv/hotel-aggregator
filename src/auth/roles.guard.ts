@@ -14,19 +14,18 @@ export class RolesGuard implements CanActivate {
     // записываем в ролз допустимые роли из декоратора @Roles(['role'])
     const availableRoles = this.reflector.get(Roles, context.getHandler());
     if (!availableRoles) {
-      return false;
+      return true;
     }
     const request = context.switchToHttp().getRequest();
 
-    console.log(request.user.role);
-    const userRole = request.user.role;
+    let userRole = 'some role';
+    if (request?.user?.role) userRole = request.user.role;
 
     const isAuthenticated = request.isAuthenticated();
     const isRoleAvailable = this.authService.matchRoles(
       availableRoles,
       userRole,
     );
-    console.log(isRoleAvailable);
 
     return isAuthenticated && isRoleAvailable; // если авторизован и есть роль то возвращаем true
   }

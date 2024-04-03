@@ -10,7 +10,6 @@ export class AuthService {
   ) {}
 
   matchRoles(availableRoles: string[], userRole: string) {
-    console.log(availableRoles, userRole);
     if (availableRoles.includes(userRole)) {
       return true;
     } else {

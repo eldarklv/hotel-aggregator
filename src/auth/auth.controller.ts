@@ -15,10 +15,17 @@ export class AuthController {
     return req.user;
   }
 
+  // роут для тестов
   @Get('/api/auth/test')
   @Roles(['manager'])
   @UseGuards(RolesGuard)
   test(@Request() req) {
     return req.user;
+  }
+
+  @Post('/api/auth/logout')
+  logout(@Request() req): any {
+    req.session.destroy();
+    return { msg: 'The user session has ended' };
   }
 }
