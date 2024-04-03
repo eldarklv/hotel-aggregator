@@ -12,20 +12,23 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     // записываем в ролз допустимые роли из декоратора @Roles(['role'])
-    const roles = this.reflector.get(Roles, context.getHandler());
-    if (!roles) {
-      return true;
+    const availableRoles = this.reflector.get(Roles, context.getHandler());
+    if (!availableRoles) {
+      return false;
     }
     const request = context.switchToHttp().getRequest();
 
-    const user = request.user;
-    console.log(user);
+    console.log(request.user.role);
+    const userRole = request.user.role;
 
-    // тестирование ролевки
-    // const roles = ['admin', 'manager'];
-    // const user = { role: 'admin' };
+    const isAuthenticated = request.isAuthenticated();
+    const isRoleAvailable = this.authService.matchRoles(
+      availableRoles,
+      userRole,
+    );
+    console.log(isRoleAvailable);
 
-    return this.authService.matchRoles(roles, user.role);
+    return isAuthenticated && isRoleAvailable; // если авторизован и есть роль то возвращаем true
   }
 }
 // далее нужно сделать аутентификацию с сессией. из сесси получать роль для авторизации
