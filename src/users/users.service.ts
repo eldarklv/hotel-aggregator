@@ -63,7 +63,7 @@ export class UsersService implements IUserService {
   findAll(params: SearchUserParams): Promise<User[]> {
     let { limit, offset, email, name, contactPhone } = params;
 
-    limit = limit || 10;
+    limit = limit || 5;
     offset = offset || 0;
     email = email || '';
     name = name || '';
