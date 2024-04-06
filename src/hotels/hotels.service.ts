@@ -1,8 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { IHotelService } from './interfaces/IHotelService';
 import { ID } from 'src/types/CommonTypes';
 import { SearchHotelParams } from './interfaces/SearchHotelParams';

@@ -16,7 +16,7 @@ export class HotelRoom {
   images: string[];
 
   @Prop({ required: true, default: true })
-  isEnabled: string;
+  isEnabled: boolean;
 }
 
 export const HotelRoomSchema = SchemaFactory.createForClass(HotelRoom);

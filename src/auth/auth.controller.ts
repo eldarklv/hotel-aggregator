@@ -17,7 +17,7 @@ export class AuthController {
 
   // роут для тестов
   @Get('/api/auth/test')
-  @Roles(['manager'])
+  @Roles(['manager', 'admin'])
   @UseGuards(RolesGuard)
   test(@Request() req) {
     return req.user;

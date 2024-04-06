@@ -27,6 +27,7 @@ export class UsersController {
   }
 
   @Get('/api/admin/users')
+  @UsePipes(ValidationPipe)
   @Roles(['admin'])
   @UseGuards(RolesGuard)
   getUsersListByAdmin(
@@ -46,6 +47,7 @@ export class UsersController {
   }
 
   @Get('/api/manager/users')
+  @UsePipes(ValidationPipe)
   @Roles(['manager'])
   @UseGuards(RolesGuard)
   getUsersListByManager(
@@ -66,11 +68,13 @@ export class UsersController {
 
   // неиспользуемые ручки
   @Get('/api/admin/user-by-id/:id')
+  @UsePipes(ValidationPipe)
   getUserById(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
 
   @Get('/api/admin/user-by-email')
+  @UsePipes(ValidationPipe)
   getUserByEmail(@Query('email') email: string) {
     return this.usersService.findByEmail(email);
   }
