@@ -16,7 +16,6 @@ import { HotelRoomService } from './hotel-room.service';
 import { HotelDto } from './dto/hotel.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { HotelRoomDto } from './dto/hotel-room.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller()
@@ -70,15 +69,21 @@ export class HotelsController {
     return this.hotelsService.update(id, hotel);
   }
 
-  // @Post()
-  // @UsePipes(ValidationPipe)
-  // @Roles(['admin'])
-  // @UseInterceptors(FilesInterceptor('images'))
-  // @UseGuards(RolesGuard)
-  // createHotelRoom(
-  //   @Body() hotelRoom: HotelRoomDto,
-  //   @UploadedFiles() images: Array<Express.Multer.File>,
-  // ) {
-  //   return this.hotelRoomService.create({ ...hotelRoom, images });
-  // }
+  @Post('/api/admin/hotel-rooms')
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(FilesInterceptor('images'))
+  createHotelRoom(
+    @UploadedFiles() images: Array<Express.Multer.File>,
+    @Body() body,
+  ) {
+    const imagePaths = images.map((image) => {
+      return image.path;
+    });
+    const hotelRoomObject = {
+      images: imagePaths,
+      hotel: body.hotelId,
+      description: body.description,
+    };
+    return this.hotelRoomService.create(hotelRoomObject);
+  }
 }

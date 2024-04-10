@@ -7,8 +7,8 @@ import { HotelRoomService } from './hotel-room.service';
 import { HotelRoom, HotelRoomSchema } from './schemas/hotel-room.schema';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { AuthModule } from 'src/auth/auth.module';
-import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -18,6 +18,9 @@ import { UsersModule } from 'src/users/users.module';
     ]),
     AuthModule,
     UsersModule,
+    MulterModule.register({
+      dest: './images',
+    }),
   ],
   controllers: [HotelsController],
   providers: [HotelsService, HotelRoomService, RolesGuard],

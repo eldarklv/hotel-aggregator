@@ -5,7 +5,7 @@ import { SearchRoomsParams } from './interfaces/SearchRoomsParams';
 import { HotelRoom } from './schemas/hotel-room.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { off } from 'process';
+import { HotelRoomDto } from './dto/hotel-room.dto';
 
 @Injectable()
 export class HotelRoomService implements IHotelRoomService {
@@ -14,7 +14,7 @@ export class HotelRoomService implements IHotelRoomService {
     private hotelRoomModel: Model<HotelRoom>,
   ) {}
 
-  create(hotel: HotelRoom): Promise<HotelRoom> {
+  create(hotel: HotelRoomDto): Promise<HotelRoom> {
     const newHotelRoom = this.hotelRoomModel.create(hotel);
 
     return newHotelRoom;

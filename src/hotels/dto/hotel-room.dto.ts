@@ -18,7 +18,6 @@ export class HotelRoomDto {
   @IsArray()
   images: string[];
 
-  @IsNotEmpty()
   @IsBoolean()
-  isEnabled: boolean;
+  isEnabled?: boolean;
 }
