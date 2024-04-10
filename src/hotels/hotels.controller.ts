@@ -10,6 +10,7 @@ import {
   Put,
   UseInterceptors,
   UploadedFiles,
+  Param,
 } from '@nestjs/common';
 import { HotelsService } from './hotels.service';
 import { HotelRoomService } from './hotel-room.service';
@@ -71,6 +72,8 @@ export class HotelsController {
 
   @Post('/api/admin/hotel-rooms')
   @UsePipes(ValidationPipe)
+  @Roles(['admin'])
+  @UseGuards(RolesGuard)
   @UseInterceptors(FilesInterceptor('images'))
   createHotelRoom(
     @UploadedFiles() images: Array<Express.Multer.File>,
@@ -85,5 +88,25 @@ export class HotelsController {
       description: body.description,
     };
     return this.hotelRoomService.create(hotelRoomObject);
+  }
+
+  @Put('/api/admin/hotel-rooms/:id')
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(FilesInterceptor('images'))
+  editHotelRoom(
+    @UploadedFiles() images: Array<Express.Multer.File>,
+    @Body() body,
+    @Param('id') id: string,
+  ) {
+    const imagePaths = images.map((image) => {
+      return image.path;
+    });
+    const hotelRoomObject = {
+      images: imagePaths,
+      hotel: body.hotelId,
+      description: body.description,
+      isEnabled: body.isEnabled,
+    };
+    return this.hotelRoomService.update(id, hotelRoomObject);
   }
 }

@@ -47,8 +47,10 @@ export class HotelRoomService implements IHotelRoomService {
     return hotelRooms;
   }
 
-  update(id: ID, data: Partial<HotelRoom>): Promise<HotelRoom> {
-    const updatedHotelRoom = this.hotelRoomModel.findByIdAndUpdate(id, data);
+  async update(id: ID, data: HotelRoomDto): Promise<HotelRoom> {
+    const updatedHotelRoom = await this.hotelRoomModel
+      .findByIdAndUpdate(id, data, { new: true })
+      .lean();
 
     return updatedHotelRoom;
   }
