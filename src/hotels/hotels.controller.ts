@@ -26,6 +26,7 @@ export class HotelsController {
     private readonly hotelRoomService: HotelRoomService,
   ) {}
 
+  // Основной API для поиска номеров
   @Get('/api/common/hotel-rooms')
   @UsePipes(ValidationPipe)
   searchRooms(
@@ -36,12 +37,14 @@ export class HotelsController {
     return this.hotelRoomService.search({ limit, offset, hotelId });
   }
 
+  // Получение подробной информации о номере
   @Get('/api/common/hotel-rooms/:id')
   @UsePipes(ValidationPipe)
-  searchRoomById(@Query('id') id: string) {
+  searchRoomById(@Param('id') id: string) {
     return this.hotelRoomService.findById(id);
   }
 
+  // Добавление гостиницы администратором.
   @Post('/api/admin/hotels')
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
@@ -50,6 +53,7 @@ export class HotelsController {
     return this.hotelsService.create(hotel);
   }
 
+  // Получение списка гостиниц администратором.
   @Get('/api/admin/hotels')
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
@@ -62,6 +66,7 @@ export class HotelsController {
     return this.hotelsService.search({ limit, offset, title });
   }
 
+  // Изменение описания гостиницы администратором.
   @Put('/api/admin/hotels/:id')
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
@@ -70,6 +75,7 @@ export class HotelsController {
     return this.hotelsService.update(id, hotel);
   }
 
+  // Добавление номера гостиницы администратором.
   @Post('/api/admin/hotel-rooms')
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
@@ -90,9 +96,12 @@ export class HotelsController {
     return this.hotelRoomService.create(hotelRoomObject);
   }
 
+  // Изменение описания номера гостиницы администратором.
   @Put('/api/admin/hotel-rooms/:id')
   @UsePipes(ValidationPipe)
   @UseInterceptors(FilesInterceptor('images'))
+  @Roles(['admin'])
+  @UseGuards(RolesGuard)
   editHotelRoom(
     @UploadedFiles() images: Array<Express.Multer.File>,
     @Body() body,

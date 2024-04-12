@@ -21,6 +21,7 @@ export class HotelRoomService implements IHotelRoomService {
   }
 
   findById(id: ID): Promise<HotelRoom> {
+    console.log(id);
     const hotelRoom = this.hotelRoomModel.findById(id);
 
     return hotelRoom;
@@ -37,7 +38,9 @@ export class HotelRoomService implements IHotelRoomService {
     const query: any = {};
 
     if (isEnabled) query.isEnabled = isEnabled;
-    if (hotelId) query.hotelId = hotelId;
+    if (hotelId) query._id = hotelId;
+
+    console.log(query);
 
     const hotelRooms = this.hotelRoomModel
       .find(query)
