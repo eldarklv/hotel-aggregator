@@ -56,13 +56,21 @@ export class ReservationsService implements IReservation {
     }
   }
 
-  removeReservation(id: ID): Promise<void> {
-    this.reservationModel.findByIdAndDelete(id);
+  async removeReservation(id: ID): Promise<void> {
+    await this.reservationModel.findByIdAndDelete(id);
     return;
   }
 
   getReservations(filter: ReservationSearchOptions): Promise<Reservation[]> {
-    const reservations = this.reservationModel.find(filter);
+    const { userId, dateStart, dateEnd } = filter;
+
+    const query: any = {};
+
+    if (userId) query.userId = userId;
+    if (dateStart) query.dateStart = { $gte: dateStart };
+    if (dateEnd) query.dateEnd = { $lte: dateEnd };
+
+    const reservations = this.reservationModel.find(query);
 
     return reservations;
   }
