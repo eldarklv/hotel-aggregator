@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { ISupportRequestClientService } from './interfaces/ISupportRequestClientService';
 import { ID } from 'src/types/CommonTypes';
-import { CreateSupportRequestDto } from './dto/CreateSupportRequestDto';
 import { MarkMessagesAsReadDto } from './dto/MarkMessagesAsReadDto';
 import { SupportRequest } from './schemas/support-request.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Message } from './schemas/message.schema';
 import { getMskDate } from 'src/helpers/dateHelper';
+import { ISupportRequestEmployeeService } from './interfaces/ISupportRequestEmployeeService';
 
 @Injectable()
 export class SupportRequestClientService
-  implements ISupportRequestClientService
+  implements ISupportRequestEmployeeService
 {
   constructor(
     @InjectModel(SupportRequest.name)
@@ -20,12 +19,6 @@ export class SupportRequestClientService
     @InjectModel(Message.name)
     private message: Model<Message>,
   ) {}
-
-  createSupportRequest(data: CreateSupportRequestDto): Promise<SupportRequest> {
-    const supportRequest = this.supportRequest.create(data);
-
-    return supportRequest;
-  }
 
   async markMessagesAsRead(params: MarkMessagesAsReadDto) {
     const { user, supportRequest, createdBefore } = params;
@@ -40,7 +33,7 @@ export class SupportRequestClientService
       .updateMany(
         {
           _id: { $in: supportReq.messages },
-          author: { $ne: user },
+          author: { $eq: user },
           sentAt: { $lte: createdBefore },
           readAt: { $eq: null },
         },
@@ -60,10 +53,16 @@ export class SupportRequestClientService
 
     const { messages } = supportRequest;
     const count = messages.reduce((acc, message) => {
-      if (message.author.role !== 'client' && !message.readAt) return acc + 1;
+      if (message.author.role === 'client' && !message.readAt) return acc + 1;
       return acc;
     }, 0);
 
     return count;
+  }
+
+  async closeRequest(supportRequestId: ID): Promise<void> {
+    await this.supportRequest.findByIdAndUpdate(supportRequestId, {
+      isActive: false,
+    });
   }
 }
