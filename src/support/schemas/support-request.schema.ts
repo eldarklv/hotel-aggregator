@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from '../../users/schemas/user.schema';
 import { Message } from './message.schema';
+import { getMskDate } from 'src/helpers/dateHelper';
 
 export type SupportRequestDocument = HydratedDocument<SupportRequest>;
 
@@ -15,13 +16,16 @@ export class SupportRequest {
   })
   user: User;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: getMskDate() })
   sentAt: Date;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }] })
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }],
+    default: [],
+  })
   messages: Message[];
 
-  @Prop()
+  @Prop({ default: true })
   isActive: boolean;
 }
 
