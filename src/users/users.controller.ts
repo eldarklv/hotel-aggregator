@@ -18,6 +18,7 @@ import { Roles } from 'src/auth/roles.decorator';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // Позволяет пользователю с ролью admin создать пользователя в системе.
   @Post('/api/admin/users')
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
@@ -26,6 +27,7 @@ export class UsersController {
     return this.usersService.create(user);
   }
 
+  // Позволяет пользователю с ролью admin создать пользователя в системе.
   @Get('/api/admin/users')
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
@@ -46,6 +48,7 @@ export class UsersController {
     });
   }
 
+  // Позволяет пользователю с ролью admin создать пользователя в системе.
   @Get('/api/manager/users')
   @UsePipes(ValidationPipe)
   @Roles(['manager'])
