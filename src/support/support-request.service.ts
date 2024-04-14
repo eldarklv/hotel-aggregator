@@ -5,21 +5,70 @@ import { SendMessageDto } from './dto/SendMessageDto';
 import { GetChatListParams } from './interfaces/GetChatListParams';
 import { Message } from './schemas/message.schema';
 import { SupportRequest } from './schemas/support-request.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { getMskDate } from 'src/helpers/dateHelper';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class SupportRequestService implements ISupportRequestService {
+  constructor(
+    @InjectModel(SupportRequest.name)
+    private supportRequest: Model<SupportRequest>,
+
+    @InjectModel(Message.name)
+    private message: Model<Message>,
+
+    private eventEmitter: EventEmitter2,
+  ) {}
+
   findSupportRequests(params: GetChatListParams): Promise<SupportRequest[]> {
-    throw new Error('Method not implemented.');
+    const { user, isActive } = params;
+
+    const supportRequests = this.supportRequest.find({
+      user,
+      isActive,
+    });
+
+    return supportRequests;
   }
-  sendMessage(data: SendMessageDto): Promise<Message> {
-    throw new Error('Method not implemented.');
+
+  async sendMessage(data: SendMessageDto): Promise<Message> {
+    const messageData = {
+      author: data.author,
+      supportRequest: data.supportRequest,
+      text: data.text,
+      sentAt: getMskDate(),
+    };
+    const message = await this.message.create(messageData);
+
+    const supportRequest = await this.supportRequest
+      .updateOne(
+        { _id: data.supportRequest },
+        { $push: { messages: message._id } },
+      )
+      .exec();
+
+    this.eventEmitter.emit('message', {
+      supportRequest: supportRequest,
+      message: message,
+    });
+
+    return message;
   }
-  getMessages(supportRequest: ID): Promise<Message[]> {
-    throw new Error('Method not implemented.');
+
+  async getMessages(supportRequestID: ID): Promise<Message[]> {
+    const supportRequestMessages = await this.supportRequest
+      .findById(supportRequestID)
+      .lean();
+
+    return supportRequestMessages.messages;
   }
+
   subscribe(
     handler: (supportRequest: SupportRequest, message: Message) => void,
   ): () => void {
-    throw new Error('Method not implemented.');
+    this.eventEmitter.on('message', handler);
+    return;
   }
 }
