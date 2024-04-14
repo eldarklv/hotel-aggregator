@@ -11,6 +11,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { UsersModule } from 'src/users/users.module';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { SupportRequestClientService } from './SupportRequestClientService';
+import { SupportRequestEmployeeService } from './SupportRequestEmployeeService';
 
 @Module({
   imports: [
@@ -22,6 +23,11 @@ import { SupportRequestClientService } from './SupportRequestClientService';
     UsersModule,
   ],
   controllers: [SupportController],
-  providers: [SupportRequestService, RolesGuard, SupportRequestClientService],
+  providers: [
+    SupportRequestService,
+    RolesGuard,
+    SupportRequestClientService,
+    SupportRequestEmployeeService,
+  ],
 })
 export class SupportModule {}

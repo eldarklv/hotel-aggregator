@@ -9,7 +9,7 @@ import { getMskDate } from 'src/helpers/dateHelper';
 import { ISupportRequestEmployeeService } from './interfaces/ISupportRequestEmployeeService';
 
 @Injectable()
-export class SupportRequestClientService
+export class SupportRequestEmployeeService
   implements ISupportRequestEmployeeService
 {
   constructor(

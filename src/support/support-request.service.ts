@@ -25,10 +25,13 @@ export class SupportRequestService implements ISupportRequestService {
   findSupportRequests(params: GetChatListParams): Promise<SupportRequest[]> {
     const { user, isActive } = params;
 
-    const supportRequests = this.supportRequest.find({
-      user,
-      isActive,
-    });
+    const query: any = {};
+
+    if (user) query.user = user;
+
+    if (isActive) query.isActive = isActive;
+
+    const supportRequests = this.supportRequest.find(query);
 
     return supportRequests;
   }
