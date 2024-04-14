@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
-import { SupportService } from './support.service';
+import { SupportRequestService } from './support-request.service';
 
 @Controller('support')
 export class SupportController {
-  constructor(private readonly supportService: SupportService) {}
+  constructor(private readonly supportService: SupportRequestService) {}
 }
