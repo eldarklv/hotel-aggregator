@@ -6,7 +6,7 @@ export class SendMessageDto {
   author: ID;
 
   @IsMongoId()
-  supportRequest: ID;
+  supportRequest: string;
 
   @IsNotEmpty()
   text: string;

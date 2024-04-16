@@ -4,7 +4,10 @@ import { ID } from 'src/types/CommonTypes';
 import { SendMessageDto } from './dto/SendMessageDto';
 import { GetChatListParams } from './interfaces/GetChatListParams';
 import { Message } from './schemas/message.schema';
-import { SupportRequest } from './schemas/support-request.schema';
+import {
+  SupportRequest,
+  SupportRequestDocument,
+} from './schemas/support-request.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { getMskDate } from 'src/helpers/dateHelper';
@@ -43,9 +46,8 @@ export class SupportRequestService implements ISupportRequestService {
       sentAt: getMskDate(),
     };
     const message = await this.message.create(messageData);
-    console.log(message);
 
-    const supportRequest = await this.supportRequest
+    await this.supportRequest
       .updateOne(
         { _id: data.supportRequest },
         { $push: { messages: message._id } },
@@ -53,7 +55,7 @@ export class SupportRequestService implements ISupportRequestService {
       .exec();
 
     this.eventEmitter.emit('message', {
-      supportRequest: supportRequest,
+      supportRequest: data.supportRequest,
       message: message,
     });
 
@@ -74,7 +76,7 @@ export class SupportRequestService implements ISupportRequestService {
   }
 
   subscribe(
-    handler: (supportRequest: SupportRequest, message: Message) => void,
+    handler: (supportRequest: string, message: Message) => void,
   ): () => void {
     this.eventEmitter.on('message', handler);
     return;

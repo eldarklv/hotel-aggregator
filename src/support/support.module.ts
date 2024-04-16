@@ -12,6 +12,7 @@ import { UsersModule } from 'src/users/users.module';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { SupportRequestClientService } from './SupportRequestClientService';
 import { SupportRequestEmployeeService } from './SupportRequestEmployeeService';
+import { SupportGateway } from './support.gateway';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SupportRequestEmployeeService } from './SupportRequestEmployeeService';
     RolesGuard,
     SupportRequestClientService,
     SupportRequestEmployeeService,
+    SupportGateway,
   ],
 })
 export class SupportModule {}
