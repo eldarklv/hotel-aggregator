@@ -5,7 +5,6 @@ import {
   Param,
   Post,
   Query,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,8 +12,7 @@ import { SupportRequestService } from './support-request.service';
 import { SupportRequestClientService } from './SupportRequestClientService';
 import { SupportRequestEmployeeService } from './SupportRequestEmployeeService';
 import { CreateSupportRequestDto } from './dto/CreateSupportRequestDto';
-import { Roles } from 'src/auth/roles.decorator';
-import { RolesGuard } from 'src/auth/roles.guard';
+
 import { SendMessageDto } from './dto/SendMessageDto';
 import { MarkMessagesAsReadDto } from './dto/MarkMessagesAsReadDto';
 

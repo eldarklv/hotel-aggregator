@@ -28,8 +28,6 @@ export class SupportRequestEmployeeService
       .findById(supportRequest)
       .exec();
 
-    console.log(supportRequestDb);
-
     // Обновим все сообщения, которые были отправлены не пользователем и до определенной даты
     const updatedMessages = await this.message
       .updateMany(
@@ -44,8 +42,6 @@ export class SupportRequestEmployeeService
         { readAt: getMskDate() },
       )
       .exec();
-
-    console.log(updatedMessages);
 
     if (updatedMessages) {
       return true;
