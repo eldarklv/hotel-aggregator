@@ -48,7 +48,7 @@ export class UsersController {
     });
   }
 
-  // Позволяет пользователю с ролью admin создать пользователя в системе.
+  // Позволяет пользователю с manager пользователя в системе.
   @Get('/api/manager/users')
   @UsePipes(ValidationPipe)
   @Roles(['manager'])

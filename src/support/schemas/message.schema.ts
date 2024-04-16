@@ -1,15 +1,15 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from '../../users/schemas/user.schema';
 
 export type MessageDocument = HydratedDocument<Message>;
 
+@Schema({ timestamps: true })
 export class Message {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true,
   })
   author: User;
 

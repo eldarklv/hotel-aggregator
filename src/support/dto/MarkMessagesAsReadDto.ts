@@ -1,13 +1,13 @@
-import { IsDate, IsMongoId } from 'class-validator';
+import { IsISO8601, IsMongoId } from 'class-validator';
 import { ID } from 'src/types/CommonTypes';
 
 export class MarkMessagesAsReadDto {
   @IsMongoId()
-  user: ID;
+  user: string;
 
   @IsMongoId()
-  supportRequest: ID;
+  supportRequest: string;
 
-  @IsDate()
+  @IsISO8601()
   createdBefore: Date;
 }

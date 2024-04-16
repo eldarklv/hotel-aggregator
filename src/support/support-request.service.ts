@@ -39,11 +39,11 @@ export class SupportRequestService implements ISupportRequestService {
   async sendMessage(data: SendMessageDto): Promise<Message> {
     const messageData = {
       author: data.author,
-      supportRequest: data.supportRequest,
       text: data.text,
       sentAt: getMskDate(),
     };
     const message = await this.message.create(messageData);
+    console.log(message);
 
     const supportRequest = await this.supportRequest
       .updateOne(
@@ -60,12 +60,17 @@ export class SupportRequestService implements ISupportRequestService {
     return message;
   }
 
-  async getMessages(supportRequestID: ID): Promise<Message[]> {
-    const supportRequestMessages = await this.supportRequest
+  async getMessages(supportRequestID: ID): Promise<any> {
+    const supportRequest = await this.supportRequest
       .findById(supportRequestID)
+      .populate({
+        path: 'messages',
+        select: 'createdAt text readAt',
+        populate: { path: 'author', select: 'id name' },
+      })
       .lean();
 
-    return supportRequestMessages.messages;
+    return supportRequest.messages;
   }
 
   subscribe(

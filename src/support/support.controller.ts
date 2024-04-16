@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -14,6 +15,8 @@ import { SupportRequestEmployeeService } from './SupportRequestEmployeeService';
 import { CreateSupportRequestDto } from './dto/CreateSupportRequestDto';
 import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { SendMessageDto } from './dto/SendMessageDto';
+import { MarkMessagesAsReadDto } from './dto/MarkMessagesAsReadDto';
 
 @Controller()
 export class SupportController {
@@ -44,6 +47,7 @@ export class SupportController {
     return this.supportRequestService.findSupportRequests({ user, isActive });
   }
 
+  // Позволяет пользователю с ролью manager получить список обращений от клиентов.
   @Get('/api/manager/support-requests')
   @UsePipes(ValidationPipe)
   // @Roles(['client'])
@@ -53,5 +57,28 @@ export class SupportController {
     @Query('isActive') isActive?: boolean,
   ) {
     return this.supportRequestService.findSupportRequests({ user, isActive });
+  }
+
+  // Позволяет пользователю с ролью manager или client получить все сообщения из чата.
+  @Get('/api/common/support-requests/:id/messages')
+  @UsePipes(ValidationPipe)
+  getMessageFromChat(@Param('id') id: string) {
+    return this.supportRequestService.getMessages(id);
+  }
+
+  // Позволяет пользователю с ролью manager или client отправлять сообщения в чат.
+  // передал id запроса в боди, просто так удобнее
+  @Post('/api/common/support-requests/messages')
+  @UsePipes(ValidationPipe)
+  sendMessageToChat(@Body() message: SendMessageDto) {
+    return this.supportRequestService.sendMessage(message);
+  }
+
+  // Позволяет пользователю с ролью manager или client отправлять отметку, что сообщения прочитаны.
+  // Тоже передал айди обрщения в боди. Мне кажется так удобнее пользоваться методом
+  @Post('/api/common/support-requests/messages/read')
+  @UsePipes(ValidationPipe)
+  readMessage(@Body() body: MarkMessagesAsReadDto) {
+    return this.supportRequestEmployeeService.markMessagesAsRead(body);
   }
 }

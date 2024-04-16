@@ -3,7 +3,7 @@ import { ID } from 'src/types/CommonTypes';
 import { MarkMessagesAsReadDto } from './dto/MarkMessagesAsReadDto';
 import { SupportRequest } from './schemas/support-request.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Message } from './schemas/message.schema';
 import { getMskDate } from 'src/helpers/dateHelper';
 import { ISupportRequestEmployeeService } from './interfaces/ISupportRequestEmployeeService';
@@ -24,22 +24,34 @@ export class SupportRequestEmployeeService
     const { user, supportRequest, createdBefore } = params;
 
     // Найдем соответствующий SupportRequest
-    const supportReq = await this.supportRequest
+    const supportRequestDb = await this.supportRequest
       .findById(supportRequest)
       .exec();
 
+    console.log(supportRequestDb);
+
     // Обновим все сообщения, которые были отправлены не пользователем и до определенной даты
-    await this.message
+    const updatedMessages = await this.message
       .updateMany(
         {
-          _id: { $in: supportReq.messages },
-          author: { $eq: user },
+          _id: { $in: supportRequestDb.messages },
+          author: {
+            $ne: new mongoose.mongo.ObjectId(user),
+          },
           sentAt: { $lte: createdBefore },
           readAt: { $eq: null },
         },
         { readAt: getMskDate() },
       )
       .exec();
+
+    console.log(updatedMessages);
+
+    if (updatedMessages) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async getUnreadCount(supportRequestId: ID): Promise<number> {
