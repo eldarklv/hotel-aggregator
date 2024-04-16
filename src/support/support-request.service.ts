@@ -4,10 +4,7 @@ import { ID } from 'src/types/CommonTypes';
 import { SendMessageDto } from './dto/SendMessageDto';
 import { GetChatListParams } from './interfaces/GetChatListParams';
 import { Message } from './schemas/message.schema';
-import {
-  SupportRequest,
-  SupportRequestDocument,
-} from './schemas/support-request.schema';
+import { SupportRequest } from './schemas/support-request.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { getMskDate } from 'src/helpers/dateHelper';
