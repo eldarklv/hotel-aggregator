@@ -37,16 +37,16 @@ https://github.com/netology-code/ndjs-diplom
 - Управление отелями
 - Управление номерами в отелях
 - Бронирование отелей
-- Оттел поддержки с чатом
+- Поддержки с чатом
 
 ## Использованные технологии
 
-- Бекенд на nest
+- Backend на nest
 - Хеширование паролей bcrypt
 - Авторизация passport local
 - Система ролей nest Guard
 - Загрузка файлов multer
 - База MongoDB с библиотекой Mongoose
-- Использовал фичу монго populate и deep populate (связанные коллекции)
+- Использовал feature Mongo populate и deep populate (связанные коллекции)
 - Для чата Socket.io
 - Валидация class-validator
