@@ -30,8 +30,7 @@ $ docker compose --env-file .env -f docker-compose.dev.yml up
 По ссылке можно посмотреть ТЗ
 https://github.com/netology-code/ndjs-diplom
 
-Приложение реализуется модули
-
+В приложении реализуются модули:
 - Пользователи
 - Авторизация
 - Управление отелями
@@ -40,7 +39,6 @@ https://github.com/netology-code/ndjs-diplom
 - Поддержки с чатом
 
 ## Использованные технологии
-
 - Backend на nest
 - Хеширование паролей bcrypt
 - Авторизация passport local
