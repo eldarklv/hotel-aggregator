@@ -27,7 +27,7 @@ export class UsersController {
         return this.usersService.create(user);
     }
 
-    // Позволяет пользователю с ролью admin создать пользователя в системе.
+    // Позволяет пользователю с ролью admin получить пользователей в системе.
     @Get('/api/admin/users')
     @UsePipes(ValidationPipe)
     @Roles(['admin'])
@@ -48,7 +48,7 @@ export class UsersController {
         });
     }
 
-    // Позволяет пользователю с manager пользователя в системе.
+    // Позволяет пользователю с manager получить пользователей в системе.
     @Get('/api/manager/users')
     @UsePipes(ValidationPipe)
     @Roles(['manager'])
