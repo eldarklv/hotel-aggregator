@@ -40,11 +40,12 @@ https://github.com/netology-code/ndjs-diplom
 
 ## Использованные технологии
 - Backend на NestJS
-- Хеширование паролей bcrypt
-- Авторизация через сессии (passport local)
-- Система ролей NestJS Guard
+  - Валидация через class-validator
+  - Хеширование паролей bcrypt
+  - Авторизация через сессии (passport local)
+  - Система ролей NestJS Guard
 - Загрузка файлов multer
 - База MongoDB с библиотекой Mongoose
-- Использовал feature Mongo populate и deep populate (связанные коллекции)
+  - Использовал feature Mongo populate (связанные коллекции)
 - Для чата Socket.io
-- Валидация через class-validator
+

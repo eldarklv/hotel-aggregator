@@ -4,8 +4,8 @@
 services:
 
   hotel-aggregator:
-    image:
-    container_name:
+    image: moonelpy/ndjs:diplom_hotel_aggregator
+    container_name: hotel-aggregator
     ports:
       - 3000:3000
       - 3001:3001
