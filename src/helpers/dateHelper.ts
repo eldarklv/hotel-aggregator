@@ -4,3 +4,5 @@ export function getMskDate() {
     const mskDate = new Date(utcDate.getTime() + moscowOffset);
     return mskDate;
 }
+
+// решил оставить приведение к московскому времени

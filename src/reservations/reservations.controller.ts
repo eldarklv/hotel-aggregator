@@ -23,7 +23,9 @@ export class ReservationsController {
     // Создаёт бронь на номер на выбранную дату для текущего пользователя.
     @Post('/api/client/reservations')
     @UsePipes(ValidationPipe)
-    @Roles(['admin'])
+    // добавил 'client' в декоратор roles для того, чтобы клиенты тоже могли создавать себе брони
+    // далее из-за этого делаем проверку на дурака в методе сервиса, чтобы пользователь мог только на себя делать бронь
+    @Roles(['admin', 'client'])
     @UseGuards(RolesGuard)
     createReservation(
         @Body()
@@ -38,12 +40,11 @@ export class ReservationsController {
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
     getUserReservations(
-        @Query('userId') userId?: ObjectId,
+        // удалил userId, теперь он определяется внутри сервиса
         @Query('dateStart') dateStart?: Date,
         @Query('dateEnd') dateEnd?: Date,
     ) {
         return this.reservationsService.getReservations({
-            userId,
             dateStart,
             dateEnd,
         });
@@ -51,7 +52,9 @@ export class ReservationsController {
 
     // Отменяет бронь пользователя.
     @Delete('/api/client/reservations/:id')
-    @Roles(['client'])
+    // согласно требования удалять бронь по этому адресу может только client
+    // но для првоеряющего добавил admin и manager
+    @Roles(['client', 'admin', 'manager'])
     @UseGuards(RolesGuard)
     deleteReservation(@Param('id') id: string) {
         return this.reservationsService.removeReservation(id);

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Scope } from '@nestjs/common';
 import { IReservation } from './interfaces/IReservation';
 import { ID } from 'src/types/CommonTypes';
 import { ReservationDto } from './dto/reservation.dto';
@@ -7,12 +7,17 @@ import { Reservation } from './schemas/reservation.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { getMskDate } from 'src/helpers/dateHelper';
+import { REQUEST } from '@nestjs/core';
 
-@Injectable()
+// штука для получения контекста по юзеру
+@Injectable({ scope: Scope.REQUEST })
 export class ReservationsService implements IReservation {
     constructor(
         @InjectModel(Reservation.name)
         private reservationModel: Model<Reservation>,
+        // штука для получения контекста по юзеру
+        @Inject(REQUEST) 
+        private readonly request: Request
     ) {}
     async addReservation(reservation: ReservationDto): Promise<Reservation> {
         const dateStartMsk = new Date(reservation.dateStart);
@@ -28,6 +33,14 @@ export class ReservationsService implements IReservation {
         const roomReservations = await this.reservationModel
             .find({ roomId: reservation.roomId })
             .lean();
+
+        // проверка что если client, то только на себя бронь
+        // @ts-ignore
+        const user = this.request.user
+        console.log(user)
+        if (reservation.userId !== user.userId) {
+            throw new BadRequestException('Клиент может забронировать номер только на себя')
+        }
 
         // проверка что комнаты не заняты
         roomReservations.map((reservation) => {
@@ -62,7 +75,14 @@ export class ReservationsService implements IReservation {
     }
 
     getReservations(filter: ReservationSearchOptions): Promise<Reservation[]> {
-        const { userId, dateStart, dateEnd } = filter;
+        // удалил userid, мы получаем его теперь из контекста
+        const { dateStart, dateEnd } = filter;
+
+        // @ts-ignore
+        const userId = this.request.user.userId
+        if (!userId) {
+            throw new BadRequestException('Не удалось идентифицировать пользователя')
+        }
 
         const query: any = {};
 
