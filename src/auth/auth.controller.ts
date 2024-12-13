@@ -1,9 +1,10 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request } from '@nestjs/common';
 import { Roles } from './roles.decorator';
 import { RolesGuard } from './roles.guard';
 import { LocalAuthGuard } from './local.auth.guard';
+import { LoginDto } from './dto/login.dto';
 
 @Controller()
 export class AuthController {
@@ -11,7 +12,8 @@ export class AuthController {
 
   @Post('/api/auth/login')
   @UseGuards(LocalAuthGuard)
-  login(@Request() req) {
+  login(@Request() req, @Body() body: LoginDto): LoginDto {
+    // @ts-ignore
     return req.user;
   }
 
@@ -23,7 +25,7 @@ export class AuthController {
     return req.user;
   }
 
-  @Post('/api/auth/logout')
+  @Get('/api/auth/logout')
   logout(@Request() req): any {
     req.session.destroy();
     return { msg: 'The user session has ended' };

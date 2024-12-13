@@ -3,6 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { Hotel } from '../../hotels/schemas/hotel.schema';
 import { User } from '../../users/schemas/user.schema';
 import { HotelRoom } from '../../hotels/schemas/hotel-room.schema';
+import { ApiProperty } from '@nestjs/swagger';
 
 export type ReservationDocument = HydratedDocument<Hotel>;
 
@@ -14,9 +15,11 @@ export class Reservation {
     required: true,
     unique: true,
   })
+  @ApiProperty({type: () => User})
   userId: User;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Hotel', required: true })
+  @ApiProperty({type: () => Hotel})
   hotelId: Hotel;
 
   @Prop({
@@ -24,12 +27,15 @@ export class Reservation {
     ref: 'HotelRoom',
     required: true,
   })
+  @ApiProperty({type: () => HotelRoom})
   roomId: HotelRoom;
 
   @Prop({ required: true })
+  @ApiProperty()
   dateStart: Date;
 
   @Prop({ required: true })
+  @ApiProperty()
   dateEnd: Date;
 }
 

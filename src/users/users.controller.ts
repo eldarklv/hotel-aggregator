@@ -13,6 +13,8 @@ import { UsersService } from './users.service';
 import { RegisterUserDto } from './dto/registerUser.dto';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { ApiOkResponse, ApiProperty } from '@nestjs/swagger';
+import { User } from './schemas/user.schema';
 
 @Controller()
 export class UsersController {
@@ -23,6 +25,7 @@ export class UsersController {
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
   @UseGuards(RolesGuard)
+  @ApiOkResponse({ type: User })
   register(@Body() user: RegisterUserDto) {
     return this.usersService.create(user);
   }
@@ -32,6 +35,7 @@ export class UsersController {
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
   @UseGuards(RolesGuard)
+  @ApiOkResponse({ type: [User] })
   getUsersListByAdmin(
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
@@ -53,6 +57,7 @@ export class UsersController {
   @UsePipes(ValidationPipe)
   @Roles(['manager'])
   @UseGuards(RolesGuard)
+  @ApiOkResponse({ type: [User] })
   getUsersListByManager(
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
@@ -72,12 +77,14 @@ export class UsersController {
   // неиспользуемые ручки
   @Get('/api/admin/user-by-id/:id')
   @UsePipes(ValidationPipe)
+  @ApiOkResponse({ type: User })
   getUserById(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
 
   @Get('/api/admin/user-by-email')
   @UsePipes(ValidationPipe)
+  @ApiOkResponse({ type: User })
   getUserByEmail(@Query('email') email: string) {
     return this.usersService.findByEmail(email);
   }
