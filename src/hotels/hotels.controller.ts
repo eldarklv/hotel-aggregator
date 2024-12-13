@@ -18,6 +18,12 @@ import { HotelDto } from './dto/hotel.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { HotelRoomDto } from './dto/hotel-room.dto';
+import { HotelRoomPostDto } from './dto/hotel-room-post.dto';
+import { HotelRoomPutDto } from './dto/hotel-room-put.dto';
+import { ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import { HotelRoom } from './schemas/hotel-room.schema';
+import { Hotel } from './schemas/hotel.schema';
 
 @Controller()
 export class HotelsController {
@@ -29,6 +35,7 @@ export class HotelsController {
   // Основной API для поиска номеров
   @Get('/api/common/hotel-rooms')
   @UsePipes(ValidationPipe)
+  @ApiOkResponse({ type: [HotelRoom] })
   searchRooms(
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
@@ -40,6 +47,7 @@ export class HotelsController {
   // Получение подробной информации о номере
   @Get('/api/common/hotel-rooms/:id')
   @UsePipes(ValidationPipe)
+  @ApiOkResponse({ type: HotelRoom })
   searchRoomById(@Param('id') id: string) {
     return this.hotelRoomService.findById(id);
   }
@@ -49,6 +57,7 @@ export class HotelsController {
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
   @UseGuards(RolesGuard)
+  @ApiOkResponse({ type: Hotel })
   createHotel(@Body() hotel: HotelDto) {
     return this.hotelsService.create(hotel);
   }
@@ -58,6 +67,7 @@ export class HotelsController {
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
   @UseGuards(RolesGuard)
+  @ApiOkResponse({ type: [Hotel] })
   getHotelsList(
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
@@ -71,6 +81,7 @@ export class HotelsController {
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
   @UseGuards(RolesGuard)
+  @ApiOkResponse({ type: Hotel })
   updateHotel(@Query('id') id: string, @Body() hotel: HotelDto) {
     return this.hotelsService.update(id, hotel);
   }
@@ -81,9 +92,10 @@ export class HotelsController {
   @Roles(['admin'])
   @UseGuards(RolesGuard)
   @UseInterceptors(FilesInterceptor('images'))
+  @ApiOkResponse({ type: HotelRoom })
   createHotelRoom(
     @UploadedFiles() images: Array<Express.Multer.File>,
-    @Body() body,
+    @Body() body: HotelRoomPostDto,
   ) {
     const imagePaths = images.map((image) => {
       return image.path;
@@ -102,9 +114,10 @@ export class HotelsController {
   @UseInterceptors(FilesInterceptor('images'))
   @Roles(['admin'])
   @UseGuards(RolesGuard)
+  @ApiOkResponse({type: HotelRoom})
   editHotelRoom(
     @UploadedFiles() images: Array<Express.Multer.File>,
-    @Body() body,
+    @Body() body: HotelRoomPutDto,
     @Param('id') id: string,
   ) {
     const imagePaths = images.map((image) => {

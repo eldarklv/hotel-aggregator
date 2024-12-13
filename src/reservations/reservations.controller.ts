@@ -15,6 +15,8 @@ import { ReservationDto } from './dto/reservation.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { ObjectId } from 'mongoose';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { Reservation } from './schemas/reservation.schema';
 
 @Controller()
 export class ReservationsController {
@@ -25,6 +27,7 @@ export class ReservationsController {
   @UsePipes(ValidationPipe)
   @Roles(['admin'])
   @UseGuards(RolesGuard)
+  @ApiOkResponse({ type: Reservation })
   createReservation(
     @Body()
     reservation: ReservationDto,
@@ -37,6 +40,7 @@ export class ReservationsController {
   @Roles(['client'])
   @UseGuards(RolesGuard)
   @UsePipes(ValidationPipe)
+  @ApiOkResponse({ type: [Reservation] })
   getUserReservations(
     @Query('userId') userId?: ObjectId,
     @Query('dateStart') dateStart?: Date,
