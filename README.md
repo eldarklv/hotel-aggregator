@@ -25,11 +25,6 @@ $ docker compose --env-file .env -f docker-compose.dev.yml up
 
 Должен быть файл .env (заполнить как в .env.example)
 
-## Краткое описание
-
-По ссылке можно посмотреть ТЗ
-https://github.com/netology-code/ndjs-diplom
-
 Приложение реализуется модули 
 
 - Пользователи
